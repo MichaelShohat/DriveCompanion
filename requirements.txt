@@ -1,3 +1,4 @@
-kivy
-pyttsx3
-vosk
+kivy~=2.1.0
+pyttsx3~=2.90
+vosk~=0.3.32
+sounddevice~=0.4.4
