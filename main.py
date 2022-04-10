@@ -1,8 +1,8 @@
 import json
 import random
+import time
+
 import pafy
-import os
-os.add_dll_directory(r'C:\Program Files\VideoLAN\VLC')
 import vlc
 from kivy.app import App
 from kivy.uix.button import Button
@@ -49,9 +49,15 @@ class MainApp(App):
 
         video = pafy.new(url)
         best = video.getbestaudio()
-        media = vlc.MediaPlayer(best.url)
-        media.add_option('start-time=120.0')
-        media.play()
+
+        vlc_instance = vlc.Instance()
+        player = vlc_instance.media_player_new()
+        media = vlc_instance.media_new(best.url)
+        media.add_option('start-time=60')
+        media.add_option('run-time=5')
+        player.set_media(media)
+        player.play()
+        time.sleep(5)
 
 if __name__ == '__main__':
     app = MainApp()
