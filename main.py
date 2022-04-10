@@ -22,9 +22,9 @@ class MainApp(App):
         with sr.Microphone() as source:
             r.adjust_for_ambient_noise(source)
             print("Repeat now")
-            audio = r.listen(source)
+            audio = r.listen(source, timeout=1.0)
         try:
-            print("Sphinx thinks you said " + r.recognize_sphinx(audio, keyword_entries=[("hello", 0.3), ("world", 0.3)]))
+            print("Sphinx thinks you said " + r.recognize_sphinx(audio, keyword_entries=[("hello", 0.9), ("world", 0.9)]))
         except sr.UnknownValueError:
             print("Sphinx could not understand audio")
         except sr.RequestError as e:
