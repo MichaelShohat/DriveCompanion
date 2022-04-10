@@ -29,6 +29,7 @@ def callback(indata, frames, time, status):
 
 
 def run(challenge, target, timeout=10):
+
     # parser = argparse.ArgumentParser(add_help=False)
     # parser.add_argument(
     #     '-l', '--list-devices', action='store_true',
@@ -90,12 +91,14 @@ def run(challenge, target, timeout=10):
                 if rec.AcceptWaveform(data):
                     print(rec.Result())
                     for w in target:
+                        print("w is " + w)
                         if w in rec.Result():
                             found = True
 
                 else:
                     print(rec.PartialResult())
                     for w in target:
+                        print("w is " + w)
                         if w in rec.PartialResult():
                             found = True
                 if dump_fn is not None:
