@@ -34,6 +34,7 @@ class MainApp(App):
     def trivia_game(self, instance):
         with open(CHALLENGES_FILE, 'r') as f:
             challenge_dict = json.load(f)
+        f.close()
         random_challenge = challenge_dict[random.randrange(len(challenge_dict))]
         engine = pyttsx3.init()
         engine.setProperty('voice', engine.getProperty('voices')[1].id)
@@ -45,6 +46,7 @@ class MainApp(App):
     def music_game(self, instance):
         with open(SONGS_FILE, 'r') as f:
             songs_dict = json.load(f)
+        f.close()
         random_song = songs_dict[random.randrange(len(songs_dict))]
         engine = pyttsx3.init()
         engine.setProperty('voice', engine.getProperty('voices')[1].id)
@@ -64,7 +66,7 @@ class MainApp(App):
         while current_state != ended:
             current_state = player.get_state()
         try:
-            vosk_main.run("Name that song", random_song["answer"], int(random_song["duration"]) * 2)
+            vosk_main.run("Name that song", [random_song["answer"]], int(random_song["duration"]) * 2)
         except Exception as e:
             print(e)
 
