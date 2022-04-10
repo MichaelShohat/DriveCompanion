@@ -1,0 +1,12 @@
+[
+    {
+        "challenge": "How many legs does a spider have?",
+        "answer": "eight",
+        "timeout": 5
+    },
+    {
+        "challenge": "Whose nose grew longer every time he lied??",
+        "answer": "pinocchio",
+        "timeout": 5
+    }
+]

@@ -2,7 +2,7 @@
 
 import os
 import queue
-from time import sleep
+import time
 
 import sounddevice as sd
 import vosk
@@ -28,7 +28,7 @@ def callback(indata, frames, time, status):
     q.put(bytes(indata))
 
 
-def run(target=None):
+def run(target=None, timeout=10):
     # parser = argparse.ArgumentParser(add_help=False)
     # parser.add_argument(
     #     '-l', '--list-devices', action='store_true',
@@ -82,7 +82,8 @@ def run(target=None):
             engine.runAndWait()
             rec = vosk.KaldiRecognizer(model, samplerate)
             found = False
-            while not found:
+            timeout_time = time.time() + timeout
+            while not found and time.time() < timeout_time:
                 data = q.get()
                 if rec.AcceptWaveform(data):
                     print(rec.Result())
@@ -96,6 +97,9 @@ def run(target=None):
                             found = True
                 if dump_fn is not None:
                     dump_fn.write(data)
+            if time.time() > timeout_time:
+                engine.say("Your ran out of time")
+                engine.runAndWait()
 
     except KeyboardInterrupt:
         print('\nDone')
