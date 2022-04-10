@@ -3,6 +3,7 @@ from kivy.uix.button import Button
 import pyttsx3
 import vosk_main
 
+
 class MainApp(App):
     def build(self):
         button = Button(text='Press to start the companion',
@@ -17,10 +18,8 @@ class MainApp(App):
         engine = pyttsx3.init()
         engine.say("wait for speak now and say Hello World")
         engine.runAndWait()
-        engine.say("Speak now")
-        engine.runAndWait()
         try:
-            vosk_main.run()
+            vosk_main.run(['hello world'])
         except Exception as e:
             print(e)
 

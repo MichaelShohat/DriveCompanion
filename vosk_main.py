@@ -2,9 +2,13 @@
 
 import os
 import queue
+from time import sleep
+
 import sounddevice as sd
 import vosk
 import sys
+import pyttsx3
+
 
 q = queue.Queue()
 
@@ -24,7 +28,7 @@ def callback(indata, frames, time, status):
     q.put(bytes(indata))
 
 
-def run():
+def run(target=None):
     # parser = argparse.ArgumentParser(add_help=False)
     # parser.add_argument(
     #     '-l', '--list-devices', action='store_true',
@@ -54,6 +58,7 @@ def run():
     #
 
     try:
+        engine = pyttsx3.init()
         model = "model"
         if not os.path.exists(model):
             print("Please download a model for your language from https://alphacephei.com/vosk/models")
@@ -73,14 +78,22 @@ def run():
             print('#' * 80)
             print('Press Ctrl+C to stop the recording')
             print('#' * 80)
-
+            engine.say("speak now")
+            engine.runAndWait()
             rec = vosk.KaldiRecognizer(model, samplerate)
-            while True:
+            found = False
+            while not found:
                 data = q.get()
                 if rec.AcceptWaveform(data):
                     print(rec.Result())
+                    for w in target:
+                        if w in rec.Result():
+                            found = True
                 else:
                     print(rec.PartialResult())
+                    for w in target:
+                        if w in rec.PartialResult():
+                            found = True
                 if dump_fn is not None:
                     dump_fn.write(data)
 
