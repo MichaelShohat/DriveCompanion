@@ -17,18 +17,27 @@ class MainApp(App):
         print('You pressed the button!')
         r = sr.Recognizer()
         engine = pyttsx3.init()
-        engine.say("Say Hello World")
+        engine.say("wait for speak now and say Hello World")
         engine.runAndWait()
         with sr.Microphone() as source:
             r.adjust_for_ambient_noise(source)
-            print("Repeat now")
-            audio = r.listen(source, timeout=1.0)
+            engine.say("Speak now")
+            engine.runAndWait()
+            try:
+                audio = r.listen(source, timeout=3.0)
+            except sr.WaitTimeoutError as e:
+                engine.say("You didn't say anything")
+                engine.runAndWait()
         try:
             print("Sphinx thinks you said " + r.recognize_sphinx(audio, keyword_entries=[("hello", 0.9), ("world", 0.9)]))
         except sr.UnknownValueError:
-            print("Sphinx could not understand audio")
+            engine.say("You didn't say anything I can understand")
+            engine.runAndWait()
         except sr.RequestError as e:
             print("Sphinx error; {0}".format(e))
+        except UnboundLocalError as e:
+            pass
+
 
 
 if __name__ == '__main__':
