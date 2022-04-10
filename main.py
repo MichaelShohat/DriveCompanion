@@ -1,17 +1,26 @@
 from kivy.app import App
 from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
 import pyttsx3
 import vosk_main
+
+red = [1,0,0,1]
+green = [0,1,0,1]
+blue =  [0,0,1,1]
+purple = [1,0,1,1]
 
 
 class MainApp(App):
     def build(self):
-        button = Button(text='Press to start the companion',
-                        size_hint=(.5, .5),
-                        pos_hint={'center_x': .5, 'center_y': .5})
-        button.bind(on_press=self.on_press_button)
-
-        return button
+        layout = BoxLayout(padding=10)
+        colors = [red, green, blue, purple]
+        button_1 = Button(text='Press to start the companion', background_color=colors[0])
+        button_1.bind(on_press=self.on_press_button)
+        layout.add_widget(button_1)
+        button_2 = Button(text='Guess the song', background_color=colors[2])
+        button_2.bind(on_press=self.on_press_button)
+        layout.add_widget(button_2)
+        return layout
 
     def on_press_button(self, instance):
         print('You pressed the button!')
