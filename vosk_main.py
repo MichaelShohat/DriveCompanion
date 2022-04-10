@@ -28,7 +28,7 @@ def callback(indata, frames, time, status):
     q.put(bytes(indata))
 
 
-def run(target=None, timeout=10):
+def run(challenge, target, timeout=10):
     # parser = argparse.ArgumentParser(add_help=False)
     # parser.add_argument(
     #     '-l', '--list-devices', action='store_true',
@@ -59,6 +59,7 @@ def run(target=None, timeout=10):
 
     try:
         engine = pyttsx3.init()
+        engine.setProperty('voice', engine.getProperty('voices')[1].id)
         model = "model"
         if not os.path.exists(model):
             print("Please download a model for your language from https://alphacephei.com/vosk/models")
@@ -78,6 +79,7 @@ def run(target=None, timeout=10):
             print('#' * 80)
             print('Press Ctrl+C to stop the recording')
             print('#' * 80)
+            engine.say(challenge)
             engine.say("speak now")
             engine.runAndWait()
             rec = vosk.KaldiRecognizer(model, samplerate)
@@ -90,6 +92,7 @@ def run(target=None, timeout=10):
                     for w in target:
                         if w in rec.Result():
                             found = True
+
                 else:
                     print(rec.PartialResult())
                     for w in target:
@@ -99,6 +102,9 @@ def run(target=None, timeout=10):
                     dump_fn.write(data)
             if time.time() > timeout_time:
                 engine.say("Your ran out of time")
+                engine.runAndWait()
+            if found:
+                engine.say("Your are right")
                 engine.runAndWait()
 
     except KeyboardInterrupt:

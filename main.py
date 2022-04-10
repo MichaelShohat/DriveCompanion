@@ -1,6 +1,9 @@
 import json
 import random
-
+import pafy
+import os
+os.add_dll_directory(r'C:\Program Files\VideoLAN\VLC')
+import vlc
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -23,23 +26,32 @@ class MainApp(App):
         button_1.bind(on_press=self.trivia_game)
         layout.add_widget(button_1)
         button_2 = Button(text='Guess the song', background_color=colors[2])
-        button_2.bind(on_press=self.trivia_game)
+        button_2.bind(on_press=self.music_game)
         layout.add_widget(button_2)
         return layout
 
     def trivia_game(self, instance):
         with open(CHALLENGES_FILE, 'r') as f:
             challenge_dict = json.load(f)
-        print(challenge_dict)
         random_challenge = challenge_dict[random.randrange(len(challenge_dict))]
         engine = pyttsx3.init()
-        engine.say(random_challenge["challenge"])
-        engine.runAndWait()
+        engine.setProperty('voice', engine.getProperty('voices')[1].id)
+        # engine.say(random_challenge["challenge"])
+        # engine.runAndWait()
         try:
-            vosk_main.run([random_challenge["answer"]], int(random_challenge["timeout"]))
+            vosk_main.run(random_challenge["challenge"], [random_challenge["answer"]], int(random_challenge["timeout"]))
         except Exception as e:
             print(e)
 
+    def music_game(self, instance):
+
+        url = "https://www.youtube.com/watch?v=rjIiMquPSEo"
+
+        video = pafy.new(url)
+        best = video.getbestaudio()
+        media = vlc.MediaPlayer(best.url)
+        media.add_option('start-time=120.0')
+        media.play()
 
 if __name__ == '__main__':
     app = MainApp()
