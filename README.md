@@ -1,4 +1,4 @@
 # DriveCompanion
 
-Be sure to install C++ build tools for developing 
-https://visualstudio.microsoft.com/visual-cpp-build-tools/
+Get your desired model for speech recognition here and unzip in into a folder named 'model'
+https://alphacephei.com/vosk/models
